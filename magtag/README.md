@@ -1,5 +1,7 @@
 # Getting started with the magtag and circuit python
 
+Recommended editor for beginners: https://codewith.mu/
+
 1. Click reset twice not too fast not too slow
 2. Upload .u2f bootloader for circuitpython
 3. Add lib folder from example repo (to CIRCUITPYTHON volume)
