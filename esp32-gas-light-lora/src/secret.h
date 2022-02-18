@@ -1,0 +1,4 @@
+#define DEV_EUI { FILL_ME_IN }
+#define APP_EUI { FILL_ME_IN }
+#define APP_KEY { FILL_ME_IN }
+#define LICENSE {0xC1670CF8, 0x19C71AD5, 0x6CE47540, 0x8CF267EC}
