@@ -2,6 +2,16 @@
 
 Recommended editor for beginners: https://codewith.mu/
 
+## Coding tips and guides
+1. `code.py` runs automatically on boot.
+2. `secrets.py` configures the WIFI network settings
+   - this is 2.4ghz networks only, 5ghz (venue wifi) will not work
+
+## Adafruit guides:
+1. HTTP Fetch: https://learn.adafruit.com/magtag-covid-tracking-project-iot-display
+2. General Intro: https://learn.adafruit.com/adafruit-magtag
+
+## First time setup (already done for hackathon participants)
 1. Click reset twice not too fast not too slow
 2. Upload .u2f bootloader for circuitpython
 3. Add lib folder from example repo (to CIRCUITPYTHON volume)

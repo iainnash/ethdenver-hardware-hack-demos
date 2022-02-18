@@ -37,6 +37,10 @@ while True:
     for i, b in enumerate(magtag.peripherals.buttons):
         if not b.value:
             print("Button %c pressed" % chr((ord("A") + i)))
+            if (i == 0):
+                magtag.set_text("-----", 0, False)
+            if (i == 1):
+                magtag.set_text(".....", 0, False)
             magtag.peripherals.neopixel_disable = False
             magtag.peripherals.neopixels.fill(button_colors[i])
             magtag.peripherals.play_tone(button_tones[i], 0.25)
