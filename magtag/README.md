@@ -13,7 +13,7 @@ Recommended editor for beginners: https://codewith.mu/
 
 ## First time setup (already done for hackathon participants)
 1. Click reset twice not too fast not too slow
-2. Upload .u2f bootloader for circuitpython
+2. Upload .u2f bootloader for circuitpython (can be found in this folder boot/)
 3. Add lib folder from example repo (to CIRCUITPYTHON volume)
 4. Update secrets.py with WIFI information (etc).
 5. Copy code.py and secrets.py to root CIRCUITPYTHON volume

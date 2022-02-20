@@ -29,6 +29,28 @@
 #include "Arduino.h"
 #include "./secret.h"
 
+
+#include <FastLED.h>
+
+#define LED_PIN     2
+#define NUM_LEDS   120 
+#define BRIGHTNESS  64
+#define LED_TYPE    WS2812
+#define COLOR_ORDER RGB
+CRGB leds[NUM_LEDS];
+
+
+void setColor(CRGB color)
+{
+    uint8_t brightness = 255;
+    
+    for( int i = 0; i < NUM_LEDS; ++i) {
+        leds[i] = color;
+    }
+    FastLED.show();
+}
+
+
 /*license for Heltec ESP32 LoRaWan, quary your ChipID relevant license: http://resource.heltec.cn/search */
 uint32_t  license[4] = LICENSE;
 /* OTAA para*/
@@ -45,13 +67,13 @@ uint32_t DevAddr =  ( uint32_t )0x007e6ae1;
 DeviceClass_t  loraWanClass = CLASS_A;
 
 /*the application data transmission duty cycle.  value in [ms].*/
-uint32_t appTxDutyCycle = 15000;
+uint32_t appTxDutyCycle = 30000;
 
 /*OTAA or ABP*/
 bool overTheAirActivation = true;
 
 /*ADR enable*/
-bool loraWanAdr = false;
+bool loraWanAdr = true;
 
 /* Indicates if the node is sending confirmed or unconfirmed messages */
 bool isTxConfirmed = false;
@@ -62,6 +84,12 @@ uint16_t userChannelsMask[6]={ 0xFF00,0x0000,0x0000,0x0000,0x0000,0x0000 };
 
 /* Application port */
 uint8_t appPort = 2;
+
+
+void setupLeds() {
+  FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
+    FastLED.setBrightness(  BRIGHTNESS );
+}
 
 /*!
 * Number of trials to transmit the frame, if the LoRaMAC layer did not
@@ -94,13 +122,14 @@ uint8_t confirmedNbTrials = 8;
 uint8_t debugLevel = LoRaWAN_DEBUG_LEVEL;
 
 /*LoraWan region, select in arduino IDE tools*/
-LoRaMacRegion_t loraWanRegion = ACTIVE_REGION;
+LoRaMacRegion_t loraWanRegion = LORAMAC_REGION_US915;
 
 
 String LoRa_data;
 uint16_t num=0;
 bool LoRaDownLink = false;
 uint32_t LoRadonwlinkTime;
+String gasLevel;
 void downLinkDataHandle(McpsIndication_t *mcpsIndication)
 {
   LoRa_data = ""; 
@@ -118,6 +147,7 @@ void downLinkDataHandle(McpsIndication_t *mcpsIndication)
   Serial.print(num);
   Serial.print(":");
   Serial.println(LoRa_data);
+  gasLevel = LoRa_data;
 }
 
 
@@ -136,9 +166,11 @@ void setup()
   if(mcuStarted==0)
   {
     LoRaWAN.displayMcuInit();
+    setupLeds();
   }
   Serial.begin(115200);
   while (!Serial);
+
   SPI.begin(SCK,MISO,MOSI,SS);
   Mcu.init(SS,RST_LoRa,DIO0,DIO1,license);
   deviceState = DEVICE_STATE_INIT;
@@ -147,6 +179,7 @@ void setup()
 // The loop function is called in an endless loop
 void loop()
 {
+
   switch( deviceState )
   {
     case DEVICE_STATE_INIT:
@@ -170,10 +203,23 @@ void loop()
     }
     case DEVICE_STATE_CYCLE:
     {
+
+Serial.println(gasLevel);
+if (gasLevel == "R") {
+    setColor(CRGB(200, 0, 0));
+  } else if (gasLevel == "Y") {
+    setColor(CRGB(200, 200, 0));
+  } else if (gasLevel == "G") {
+    setColor(CRGB(0, 200, 0));
+  } else {
+    setColor(CRGB(0, 0, 80));
+  }
+
       // Schedule next packet transmission
       txDutyCycleTime = appTxDutyCycle + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
       LoRaWAN.cycle(txDutyCycleTime);
       deviceState = DEVICE_STATE_SLEEP;
+
       break;
     }
     case DEVICE_STATE_SLEEP:
