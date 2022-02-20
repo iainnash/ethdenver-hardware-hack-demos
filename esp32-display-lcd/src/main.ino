@@ -76,10 +76,11 @@ void loop(void) {
   int y = random(tft.height() - 160);
 
   tft.fillScreen(TFT_WHITE);
+  
 
   drawBmp("/parrot.bmp", x, y);
 
-  delay(1000);
+  delay(400);
   // for (uint8_t rotation = 0; rotation < 4; rotation++) {
   //   tft.setRotation(rotation);
   //   testText();
